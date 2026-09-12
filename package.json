@@ -1,18 +1,17 @@
 {
   "name": "cheeserush-earn",
   "version": "1.0.0",
-  "description": "CheeseRush Earn - Telegram Mini App",
+  "description": "CheeseRush Earn Telegram Mini App",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "engines": {
-  "node": "20.x"
-  }
+    "node": "20.x"
+  },
   "dependencies": {
     "express": "^4.21.2",
     "node-telegram-bot-api": "^0.66.0",
-    "better-sqlite3": "^11.8.1",
     "dotenv": "^16.4.7"
   }
 }
