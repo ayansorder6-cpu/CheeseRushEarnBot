@@ -1,1 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CheeseRush Earn</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #07140d;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      padding-bottom: 90px;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: #f5c542;
+      margin: 15px 0 25px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #123d25, #0b2417);
+      border: 1px solid #285f3b;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,.3);
+    }
+
+    .balance-title {
+      color: #a9c8b0;
+      font-size: 14px;
+    }
+
+    .balance {
+      font-size: 38px;
+      font-weight: bold;
+      color: #f5c542;
+      margin: 8px 0;
+    }
+
+    .coin {
+      font-size: 15px;
+      color: #ddd;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-size: 21px;
+    }
+
+    .task {
+      background: #10291a;
+      border-radius: 15px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #204a2e;
+    }
+
+    .task-title {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .task-reward {
+      color: #f5c542;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 13px;
+      background: #f5c542;
+      color: #111;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      background: #10291a;
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      color: #f5c542;
+      margin-top: 5px;
+    }
+
+    .ref {
+      word-break: break-all;
+      background: #07140d;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 12px 0;
+      color: #9ed6ad;
+      font-size: 13px;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 500px;
+      margin: auto;
+      background: #0b2114;
+      border-top: 1px solid #285f3b;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 5px;
+    }
+
+    .nav button {
+      background: transparent;
+      color: #a9c8b0;
+      width: auto;
+      padding: 8px 14px;
+    }
+
+    .nav button.active {
+      color: #f5c542;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .message {
+      text-align: center;
+      color: #9ed6ad;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="logo">🧀 CheeseRush Earn</div>
+
+  <!-- HOME -->
+  <section id="home" class="page active">
+
+    <div class="card">
+      <div class="balance-title">Your Balance</div>
+      <div class="balance" id="balance">0.00</div>
+      <div class="coin">USDT</div>
+    </div>
+
+    <div class="card">
+      <h2>🎁 Daily Reward</h2>
+      <p style="color:#a9c8b0;margin-bottom:15px;">
+        Claim your daily CheeseRush reward.
+      </p>
+      <button onclick="claimDaily()">Claim Daily Reward</button>
+      <div id="dailyMessage" class="message"></div>
+    </div>
+
+    <h2>📊 Statistics</h2>
+
+    <div class="stats">
+      <div class="stat">
+        Tasks
+        <strong id="tasks">0</strong>
+      </div>
+
+      <div class="stat">
+        Referrals
+        <strong id="referrals">0</strong>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- TASKS -->
+  <section id="tasksPage" class="page">
+
+    <h2>🎯 Earn Tasks</h2>
+
+    <div class="task">
+      <div class="task-title">📢 Join Telegram Channel</div>
+      <div class="task-reward">Reward: 0.10 USDT</div>
+      <button onclick="completeTask('channel')">Check Task</button>
+    </div>
+
+    <div class="task">
+      <div class="task-title">👥 Invite Friends</div>
+      <div class="task-reward">Reward: 0.05 USDT / referral</div>
+      <button onclick="showReferral()">Invite Friends</button>
+    </div>
+
+    <div class="task">
+      <div class="task-title">🎁 Daily Login</div>
+      <div class="task-reward">Reward: 0.02 USDT</div>
+      <button onclick="claimDaily()">Claim</button>
+    </div>
+
+    <div id="taskMessage" class="message"></div>
+
+  </section>
+
+
+  <!-- REFERRAL -->
+  <section id="referralPage" class="page">
+
+    <h2>👥 Referral Program</h2>
+
+    <div class="card">
+      <p style="color:#a9c8b0;">
+        Invite friends and earn rewards.
+      </p>
+
+      <div class="ref" id="refLink">
+        Loading referral link...
+      </div>
+
+      <button onclick="copyReferral()">Copy Referral Link</button>
+
+      <div class="message" id="refMessage"></div>
+    </div>
+
+  </section>
+
+
+  <!-- WITHDRAW -->
+  <section id="withdrawPage" class="page">
+
+    <h2>💰 Withdraw</h2>
+
+    <div class="card">
+
+      <p style="color:#a9c8b0;margin-bottom:15px;">
+        Available Balance
+      </p>
+
+      <div class="balance">
+        <span id="withdrawBalance">0.00</span> USDT
+      </div>
+
+      <input
+        id="wallet"
+        type="text"
+        placeholder="Enter USDT wallet address"
+        style="
+          width:100%;
+          margin:15px 0;
+          padding:14px;
+          border-radius:10px;
+          border:1px solid #285f3b;
+          background:#07140d;
+          color:white;
+        "
+      >
+
+      <button onclick="withdraw()">Request Withdrawal</button>
+
+      <div id="withdrawMessage" class="message"></div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<!-- NAVIGATION -->
+<div class="nav">
+
+  <button class="active" onclick="openPage('home',this)">
+    🏠 Home
+  </button>
+
+  <button onclick="openPage('tasksPage',this)">
+    🎯 Tasks
+  </button>
+
+  <button onclick="openPage('referralPage',this)">
+    👥 Refer
+  </button>
+
+  <button onclick="openPage('withdrawPage',this)">
+    💰 Withdraw
+  </button>
+
+</div>
+
+
+<script>
+
+let balance = 0;
+let taskCount = 0;
+let referralCount = 0;
+
+function updateUI() {
+
+  document.getElementById("balance").textContent =
+    balance.toFixed(2);
+
+  document.getElementById("withdrawBalance").textContent =
+    balance.toFixed(2);
+
+  document.getElementById("tasks").textContent =
+    taskCount;
+
+  document.getElementById("referrals").textContent =
+    referralCount;
+}
+
+
+function openPage(pageId, button) {
+
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  document.getElementById(pageId).classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  button.classList.add("active");
+}
+
+
+function claimDaily() {
+
+  balance += 0.02;
+
+  document.getElementById("dailyMessage").textContent =
+    "✅ Daily reward claimed!";
+
+  updateUI();
+}
+
+
+function completeTask(type) {
+
+  if (type === "channel") {
+
+    balance += 0.10;
+    taskCount++;
+
+    document.getElementById("taskMessage").textContent =
+      "✅ Task completed! Reward added.";
+
+    updateUI();
+  }
+}
+
+
+function showReferral() {
+
+  openPage(
+    "referralPage",
+    document.querySelectorAll(".nav button")[2]
+  );
+}
+
+
+function copyReferral() {
+
+  const link =
+    document.getElementById("refLink").textContent;
+
+  navigator.clipboard.writeText(link);
+
+  document.getElementById("refMessage").textContent =
+    "✅ Referral link copied!";
+}
+
+
+function withdraw() {
+
+  const wallet =
+    document.getElementById("wallet").value.trim();
+
+  const message =
+    document.getElementById("withdrawMessage");
+
+  if (!wallet) {
+
+    message.textContent =
+      "⚠️ Please enter your USDT wallet address.";
+
+    return;
+  }
+
+  if (balance <= 0) {
+
+    message.textContent =
+      "⚠️ Insufficient balance.";
+
+    return;
+  }
+
+  message.textContent =
+    "⏳ Withdrawal system will be connected to the secure backend.";
+
+}
+
+
+function setupTelegram() {
+
+  if (window.Telegram && Telegram.WebApp) {
+
+    Telegram.WebApp.ready();
+
+    const user =
+      Telegram.WebApp.initDataUnsafe?.user;
+
+    if (user) {
+
+      const code =
+        user.id.toString();
+
+      const link =
+        "https://t.me/CheeseRushEarnBot?start=ref_" + code;
+
+      document.getElementById("refLink").textContent =
+        link;
+    }
+
+  } else {
+
+    document.getElementById("refLink").textContent =
+      "https://t.me/CheeseRushEarnBot?start=ref_demo";
+
+  }
+}
+
+
+updateUI();
+setupTelegram();
+
+</script>
+
+</body>
+  </html>
